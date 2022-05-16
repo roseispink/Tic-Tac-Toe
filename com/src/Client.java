@@ -1,4 +1,4 @@
-package com;
+package com.src;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -23,8 +23,7 @@ public class Client {
         Scanner scanner= new Scanner(System.in);
         System.out.println("Enter IP address of host: ");
         String ipAddress = scanner.nextLine();
-        Client client = new Client(ipAddress);
+        com.src.Client client = new com.src.Client(ipAddress);
 
     }
 }
-

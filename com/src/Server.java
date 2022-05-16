@@ -1,4 +1,4 @@
-package com;
+package com.src;
 
 import java.net.ServerSocket;
 import java.util.concurrent.Executors;
@@ -9,7 +9,7 @@ public class Server {
             System.out.println("Tic Tac Toe Server is Running...");
             var pool = Executors.newFixedThreadPool(200);
             while (true) {
-                Game game = new Game();
+                com.src.Game game = new Game();
                 pool.execute(game.new Player(listener.accept(), 'X'));
                 System.out.println("Player one has join");
                 pool.execute(game.new Player(listener.accept(), 'O'));
@@ -18,4 +18,3 @@ public class Server {
         }
     }
 }
-
