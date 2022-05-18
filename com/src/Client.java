@@ -14,8 +14,8 @@ public class Client {
     private Scanner in;
     private PrintWriter out;
 
-    private com.src.Client.Square[] board = new com.src.Client.Square[9];
-    private com.src.Client.Square currentSquare;
+    private com.src.Square[] board = new com.src.Square[9];
+    private com.src.Square currentSquare;
     private JFrame frame = new JFrame("Tic Tac Toe");
     private JLabel label = new JLabel("...");
 
@@ -32,7 +32,7 @@ public class Client {
         boardPanel.setLayout(new GridLayout(3, 3, 2, 2));
         for (var i = 0; i < board.length; i++) {
             final int j = i;
-            board[i] = new com.src.Client.Square();
+            board[i] = new com.src.Square();
             board[i].addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
                     currentSquare = board[j];
@@ -45,21 +45,6 @@ public class Client {
 
     }
 
-    static class Square extends JPanel {
-        JLabel label = new JLabel();
-
-        public Square() {
-            this.setBackground(Color.white);
-            this.setLayout(new GridBagLayout());
-            this.label.setFont(new Font("Arial", 1, 40));
-            this.add(this.label);
-        }
-
-        public void setText(char text) {
-            this.label.setForeground(text == 'X' ? Color.BLUE : Color.RED);
-            this.label.setText(text + "");
-        }
-    }
 
 
     public static void main(String[] args) throws Exception {
