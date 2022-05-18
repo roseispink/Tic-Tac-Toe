@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Client {
@@ -21,9 +22,15 @@ public class Client {
 
     public Client(String serverAddress) throws Exception {
 
-        socket = new Socket(serverAddress, 10);
-        in = new Scanner(socket.getInputStream());
-        out = new PrintWriter(socket.getOutputStream(), true);
+        try{
+            socket = new Socket(serverAddress, 10);
+            in = new Scanner(socket.getInputStream());
+            out = new PrintWriter(socket.getOutputStream(), true);
+        }catch(Exception e){
+            System.out.println("Server is off or doesn't exist");
+            System.exit(-1);
+        }
+
 
         frame.getContentPane().add(label,BorderLayout.SOUTH);
 
@@ -65,7 +72,35 @@ public class Client {
     public static void main(String[] args) throws Exception {
         Scanner scanner= new Scanner(System.in);
         System.out.println("Enter IP address of host: ");
-        String ipAddress = scanner.nextLine();
+        boolean flag = true;
+        String ipAddress;
+        while(true){
+            ipAddress = scanner.nextLine();
+            if(!ipAddress.equalsIgnoreCase("localhost")){
+                String[] parts = ipAddress.split("\\.");
+                if(parts.length!=4){
+                    System.out.println("Wrong ip address, try again");
+                    continue;
+                }
+                for(int i = 0; i<4; i++){
+                    try{
+                        int temp = Integer.parseInt(parts[i]);
+                    }catch(Exception e) {
+                        System.out.println("Wrong ip address, try again");
+                        flag = false;
+                        break;
+                    }
+
+                }
+                if(flag) {
+                    break;
+                }
+            }
+            else
+                break;
+
+        }
+
         com.src.Client client = new com.src.Client(ipAddress);
 
     }
