@@ -3,18 +3,18 @@ package com.src;
 import javax.swing.*;
 import java.awt.*;
 
-public class Square extends JLabel {
+public class Square extends JPanel{
     JLabel label = new JLabel();
 
     public Square() {
-        this.setBackground(Color.yellow);
-        this.setLayout(new GridBagLayout());
-        this.label.setFont(new Font("Arial", 1, 40));
-        this.add(this.label);
+        setBackground(Color.white);
+        setLayout(new GridBagLayout());
+        label.setFont(new Font("Arial", Font.BOLD, 40));
+        add(label);
     }
 
     public void setText(char text) {
-        this.label.setForeground(text == 'X' ? Color.BLUE : Color.GREEN);
-        this.label.setText(text + "");
+        label.setForeground(text == 'X' ? Color.BLUE : Color.RED);
+        label.setText(text + "");
     }
 }
