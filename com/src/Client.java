@@ -15,12 +15,12 @@ public class Client {
     private Scanner in;
     private PrintWriter out;
 
-    private Square[] board = new Square[9];
-    private Square currentSquare;
+    private com.src.Square[] board = new com.src.Square[9];
+    private com.src.Square currentSquare;
     private JFrame frame = new JFrame("Tic Tac Toe");
-    private JLabel messageLabel = new JLabel("...");
+    private JLabel label = new JLabel("...");
 
-    public Client(String serverAddress) {
+    public Client(String serverAddress) throws Exception {
 
         try{
             socket = new Socket(serverAddress, 10);
@@ -30,15 +30,16 @@ public class Client {
             System.out.println("Server is off or doesn't exist");
             System.exit(-1);
         }
-        messageLabel.setBackground(Color.lightGray);
-        frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
+
+
+        frame.getContentPane().add(label,BorderLayout.SOUTH);
 
         var boardPanel = new JPanel();
-        boardPanel.setBackground(Color.black);
+        boardPanel.setBackground(Color.red);
         boardPanel.setLayout(new GridLayout(3, 3, 2, 2));
         for (var i = 0; i < board.length; i++) {
             final int j = i;
-            board[i] = new Square();
+            board[i] = new com.src.Square();
             board[i].addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
                     currentSquare = board[j];
@@ -51,26 +52,8 @@ public class Client {
 
     }
 
-    static class Square extends JPanel {
-        JLabel label = new JLabel();
 
-        public Square() {
-            setBackground(Color.white);
-            setLayout(new GridBagLayout());
-            label.setFont(new Font("Arial", Font.BOLD, 40));
-            add(label);
-        }
-
-        public void setText(char text) {
-            label.setForeground(text == 'X' ? Color.BLUE : Color.RED);
-            label.setText(text + "");
-        }
-    }
-
-
-
-
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         Scanner scanner= new Scanner(System.in);
         System.out.println("Enter IP address of host: ");
         boolean flag = true;
@@ -102,11 +85,7 @@ public class Client {
 
         }
 
-        Client client = new Client(ipAddress);
-        client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setSize(320, 320);
-        client.frame.setVisible(true);
-        client.frame.setResizable(false);
+        com.src.Client client = new com.src.Client(ipAddress);
 
     }
 }
