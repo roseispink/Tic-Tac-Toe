@@ -94,8 +94,6 @@ public class Client {
     }
 
 
-
-
     public static void main(String[] args) throws Exception {
         Scanner scanner= new Scanner(System.in);
         System.out.println("Enter IP address of host: ");
