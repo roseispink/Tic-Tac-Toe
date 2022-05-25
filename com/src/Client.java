@@ -2,14 +2,19 @@ package com.src;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Client {
+
+    static int win = 0;
 
     private Socket socket;
     private Scanner in;
@@ -20,16 +25,7 @@ public class Client {
     private JFrame frame = new JFrame("Tic Tac Toe");
     private JLabel messageLabel = new JLabel("...");
 
-    public Client(String serverAddress) {
-
-        try{
-            socket = new Socket(serverAddress, 10);
-            in = new Scanner(socket.getInputStream());
-            out = new PrintWriter(socket.getOutputStream(), true);
-        }catch(Exception e){
-            System.out.println("Server is off or doesn't exist");
-            System.exit(-1);
-        }
+    public Client() {
         messageLabel.setBackground(Color.lightGray);
         frame.getContentPane().add(messageLabel, BorderLayout.SOUTH);
 
@@ -48,7 +44,35 @@ public class Client {
             boardPanel.add(board[i]);
         }
         frame.getContentPane().add(boardPanel, BorderLayout.CENTER);
+    }
 
+     public void connect(String serverAddress){
+         try{
+             socket = new Socket(serverAddress, 10);
+             in = new Scanner(socket.getInputStream());
+             out = new PrintWriter(socket.getOutputStream(), true);
+         }catch(Exception e){
+             System.out.println("Server is off or doesn't exist");
+             System.exit(-1);
+         }
+     }
+     public void disconnect(){
+         System.out.println("QUIT bye bye");
+        try{
+        in.close();
+        out.close();
+        socket.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+     }
+
+    public boolean repeat()
+    {
+        JFrame f = new JFrame();
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(f, "Wanna play again?", "Your result " + win, dialogButton);
+        return dialogResult == 0;
     }
 
     public void play() throws Exception {
@@ -71,6 +95,7 @@ public class Client {
                 } else if (response.startsWith("MESSAGE")) {
                     messageLabel.setText(response.substring(8));
                 } else if (response.startsWith("VICTORY")) {
+                    win++;
                     JOptionPane.showMessageDialog(frame, "Winner Winner");
                     break;
                 } else if (response.startsWith("DEFEAT")) {
@@ -87,10 +112,11 @@ public class Client {
             out.println("QUIT");
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            socket.close();
+        }finally {
+            disconnect();
             frame.dispose();
         }
+
     }
 
 
@@ -126,11 +152,15 @@ public class Client {
 
         }
 
-        Client client = new Client(ipAddress);
-        client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.frame.setSize(320, 320);
-        client.frame.setVisible(true);
-        client.frame.setResizable(false);
-        client.play();
+        Client client;
+        do {
+            client = new Client();
+            client.connect(ipAddress);
+            client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            client.frame.setSize(320, 320);
+            client.frame.setVisible(true);
+            client.frame.setResizable(false);
+            client.play();
+        }while (client.repeat());
     }
 }
