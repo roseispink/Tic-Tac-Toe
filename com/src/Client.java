@@ -2,14 +2,11 @@ package com.src;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Client {
@@ -20,10 +17,10 @@ public class Client {
     private Scanner in;
     private PrintWriter out;
 
-    private Square[] board = new Square[9];
+    private final Square[] board = new Square[9];
     private Square currentSquare;
-    private JFrame frame = new JFrame("Tic Tac Toe");
-    private JLabel messageLabel = new JLabel("...");
+    private final JFrame frame = new JFrame("Tic Tac Toe");
+    private final JLabel messageLabel = new JLabel("...");
 
     public Client() {
         messageLabel.setBackground(Color.lightGray);
@@ -46,36 +43,36 @@ public class Client {
         frame.getContentPane().add(boardPanel, BorderLayout.CENTER);
     }
 
-     public void connect(String serverAddress){
-         try{
-             socket = new Socket(serverAddress, 10);
-             in = new Scanner(socket.getInputStream());
-             out = new PrintWriter(socket.getOutputStream(), true);
-         }catch(Exception e){
-             System.out.println("Server is off or doesn't exist");
-             System.exit(-1);
-         }
-     }
-     public void disconnect(){
-         System.out.println("QUIT bye bye");
-        try{
-        in.close();
-        out.close();
-        socket.close();
-        } catch (Exception e){
+    public void connect(String serverAddress) {
+        try {
+            socket = new Socket(serverAddress, 10);
+            in = new Scanner(socket.getInputStream());
+            out = new PrintWriter(socket.getOutputStream(), true);
+        } catch (Exception e) {
+            System.out.println("Server is off or doesn't exist");
+            System.exit(-1);
+        }
+    }
+
+    public void disconnect() {
+        System.out.println("QUIT bye bye");
+        try {
+            in.close();
+            out.close();
+            socket.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-     }
+    }
 
-    public boolean repeat()
-    {
+    public boolean repeat() {
         JFrame f = new JFrame();
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int dialogResult = JOptionPane.showConfirmDialog(f, "Wanna play again?", "Your result " + win, dialogButton);
         return dialogResult == 0;
     }
 
-    public void play() throws Exception {
+    public void play() {
         try {
             var response = in.nextLine();
             var mark = response.charAt(8);
@@ -112,42 +109,40 @@ public class Client {
             out.println("QUIT");
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             disconnect();
             frame.dispose();
         }
-
     }
 
 
-    public static void main(String[] args) throws Exception {
-        Scanner scanner= new Scanner(System.in);
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Enter IP address of host: ");
         boolean flag = true;
         String ipAddress;
-        while(true){
+        while (true) {
             ipAddress = scanner.nextLine();
-            if(!ipAddress.equalsIgnoreCase("localhost")){
+            if (!ipAddress.equalsIgnoreCase("localhost")) {
                 String[] parts = ipAddress.split("\\.");
-                if(parts.length!=4){
+                if (parts.length != 4) {
                     System.out.println("Wrong ip address, try again");
                     continue;
                 }
-                for(int i = 0; i<4; i++){
-                    try{
-                        int temp = Integer.parseInt(parts[i]);
-                    }catch(Exception e) {
+                for (int i = 0; i < 4; i++) {
+                    try {
+                        Integer.parseInt(parts[i]);
+                    } catch (Exception e) {
                         System.out.println("Wrong ip address, try again");
                         flag = false;
                         break;
                     }
 
                 }
-                if(flag) {
+                if (flag) {
                     break;
                 }
-            }
-            else
+            } else
                 break;
 
         }
@@ -161,6 +156,6 @@ public class Client {
             client.frame.setVisible(true);
             client.frame.setResizable(false);
             client.play();
-        }while (client.repeat());
+        } while (client.repeat());
     }
 }

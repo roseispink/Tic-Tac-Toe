@@ -11,7 +11,7 @@ public class Game {
     // Board cells numbered 0-8, top to bottom, left to right; null if empty
     private final Player[] board = new Player[9];
 
-    Player currentPlayer;
+    private Player currentPlayer;
 
     public boolean hasWinner() {
         return (board[0] != null && board[0] == board[1] && board[0] == board[2])
@@ -41,11 +41,11 @@ public class Game {
     }
 
     class Player implements Runnable {
-        char mark;
-        Player opponent;
-        Socket socket;
-        Scanner input;
-        PrintWriter output;
+        private final char mark;
+        private Player opponent;
+        private final Socket socket;
+        private Scanner input;
+        private PrintWriter output;
 
         public Player(Socket socket, char mark) {
             this.socket = socket;
