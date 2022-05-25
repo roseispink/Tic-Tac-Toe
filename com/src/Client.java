@@ -51,26 +51,50 @@ public class Client {
 
     }
 
-    static class Square extends JPanel {
-        JLabel label = new JLabel();
-
-        public Square() {
-            setBackground(Color.white);
-            setLayout(new GridBagLayout());
-            label.setFont(new Font("Arial", Font.BOLD, 40));
-            add(label);
-        }
-
-        public void setText(char text) {
-            label.setForeground(text == 'X' ? Color.BLUE : Color.RED);
-            label.setText(text + "");
+    public void play() throws Exception {
+        try {
+            var response = in.nextLine();
+            var mark = response.charAt(8);
+            var opponentMark = mark == 'X' ? 'O' : 'X';
+            frame.setTitle("Tic Tac Toe: Player " + mark);
+            while (in.hasNextLine()) {
+                response = in.nextLine();
+                if (response.startsWith("VALID_MOVE")) {
+                    messageLabel.setText("Valid move, please wait");
+                    currentSquare.setText(mark);
+                    currentSquare.repaint();
+                } else if (response.startsWith("OPPONENT_MOVED")) {
+                    var loc = Integer.parseInt(response.substring(15));
+                    board[loc].setText(opponentMark);
+                    board[loc].repaint();
+                    messageLabel.setText("Opponent moved, your turn");
+                } else if (response.startsWith("MESSAGE")) {
+                    messageLabel.setText(response.substring(8));
+                } else if (response.startsWith("VICTORY")) {
+                    JOptionPane.showMessageDialog(frame, "Winner Winner");
+                    break;
+                } else if (response.startsWith("DEFEAT")) {
+                    JOptionPane.showMessageDialog(frame, "Sorry you lost");
+                    break;
+                } else if (response.startsWith("TIE")) {
+                    JOptionPane.showMessageDialog(frame, "Tie");
+                    break;
+                } else if (response.startsWith("OTHER_PLAYER_LEFT")) {
+                    JOptionPane.showMessageDialog(frame, "Other player left");
+                    break;
+                }
+            }
+            out.println("QUIT");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            socket.close();
+            frame.dispose();
         }
     }
 
 
-
-
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         Scanner scanner= new Scanner(System.in);
         System.out.println("Enter IP address of host: ");
         boolean flag = true;
@@ -107,6 +131,6 @@ public class Client {
         client.frame.setSize(320, 320);
         client.frame.setVisible(true);
         client.frame.setResizable(false);
-
+        client.play();
     }
 }
