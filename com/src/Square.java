@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Square extends JPanel{
-    JLabel label = new JLabel();
+    private final JLabel label = new JLabel();
 
     public Square() {
         setBackground(Color.white);

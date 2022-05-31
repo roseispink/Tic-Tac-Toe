@@ -157,5 +157,6 @@ public class Client {
             client.frame.setResizable(false);
             client.play();
         } while (client.repeat());
+        System.exit(0);
     }
 }
